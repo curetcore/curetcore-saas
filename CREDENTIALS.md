@@ -45,8 +45,8 @@ API: http://localhost:3001
 ### Secrets (Generar antes de producción)
 ```bash
 # Generar con: openssl rand -base64 32
-JWT_SECRET=
-JWT_REFRESH_SECRET=
+JWT_SECRET=J9BPxgA4hmTnI9eLi4g5kTj2s6cwfgJ+JIhpbsj+zPc=
+JWT_REFRESH_SECRET=LLVGJTCnwjKQXVap9gAemg/qI8rq//W+ys+sRIkgDos=
 
 # Tiempos de expiración
 JWT_EXPIRES_IN=15m
@@ -86,8 +86,8 @@ Role: viewer
 ### Acceso al Panel
 ```
 URL: https://panel.curetshop.com
-Username: [tu-usuario]
-Password: [tu-password]
+Username: [PENDIENTE]
+Password: [PENDIENTE]
 ```
 
 ### Configuración de la App
@@ -121,12 +121,16 @@ REDIS_URL=redis://redis:6379
 ```
 URL: https://github.com/curetcore/curetcore-saas.git
 Visibility: Private
+Usuario: curetcore
+Email: (configurar en GitHub)
+Creado: 22 de Agosto, 2024
 ```
 
 ### Personal Access Token (para CI/CD)
 ```
-Token: ghp_[tu-token-aqui]
+Token: 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
 Scopes: repo, workflow, packages
+Creado: 22 de Agosto, 2024
 ```
 
 ## 🔄 Servicios de Terceros
@@ -227,7 +231,31 @@ psql -h panel.curetshop.com -p 5432 -U postgres -d warehouse -c "SELECT NOW();"
    - Principio de menor privilegio
    - Logs de auditoría activos
 
+## 📌 Estado del Proyecto
+
+### Completado
+- [x] Repositorio GitHub creado y configurado
+- [x] Estructura del proyecto inicializada
+- [x] Documentación completa (3 archivos)
+- [x] JWT Secrets generados
+- [x] Primer push a GitHub realizado
+
+### Pendiente
+- [ ] Instalar dependencias (npm install)
+- [ ] Configurar EasyPanel
+- [ ] Crear usuario inicial en base de datos
+- [ ] Configurar dominio curetcore.com
+- [ ] SSL certificates
+
+### URLs del Proyecto
+```
+GitHub: https://github.com/curetcore/curetcore-saas
+Docs: /docs/
+Frontend (dev): http://localhost:3000
+Backend (dev): http://localhost:3001
+```
+
 ---
 
-**Última actualización**: [Fecha]
-**Actualizado por**: [Usuario]
+**Última actualización**: 22 de Agosto, 2024 - 15:15
+**Actualizado por**: @ronaldopaulino
