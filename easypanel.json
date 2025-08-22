@@ -1,0 +1,73 @@
+{
+  "name": "curetcore",
+  "services": {
+    "frontend": {
+      "type": "app",
+      "image": "curetcore/frontend:latest",
+      "domains": [
+        {
+          "host": "core.curetcore.com",
+          "https": true,
+          "port": 3000
+        }
+      ],
+      "env": {
+        "NODE_ENV": "production",
+        "NEXT_PUBLIC_API_URL": "https://api.curetcore.com",
+        "NEXT_PUBLIC_APP_NAME": "CuretCore",
+        "NEXT_PUBLIC_APP_VERSION": "2.0.0",
+        "NEXT_PUBLIC_COMPANY_NAME": "Curetshop",
+        "NEXT_PUBLIC_REFRESH_INTERVAL": "300000"
+      },
+      "deploy": {
+        "replicas": 1,
+        "command": null,
+        "restartPolicy": "always"
+      }
+    },
+    "backend": {
+      "type": "app",
+      "image": "curetcore/backend:latest",
+      "domains": [
+        {
+          "host": "api.curetcore.com",
+          "https": true,
+          "port": 3001
+        }
+      ],
+      "env": {
+        "NODE_ENV": "production",
+        "PORT": "3001",
+        "DATABASE_URL": "postgresql://postgres:Pitagora@@147.93.177.156:5432/warehouse?sslmode=disable",
+        "DATABASE_SSL": "false",
+        "JWT_SECRET": "@SECRETS:JWT_SECRET",
+        "JWT_REFRESH_SECRET": "@SECRETS:JWT_REFRESH_SECRET",
+        "JWT_EXPIRES_IN": "15m",
+        "JWT_REFRESH_EXPIRES_IN": "7d",
+        "REDIS_URL": "redis://redis:6379",
+        "CORS_ORIGIN": "https://core.curetcore.com",
+        "RATE_LIMIT_WINDOW": "15m",
+        "RATE_LIMIT_MAX": "100"
+      },
+      "deploy": {
+        "replicas": 2,
+        "command": null,
+        "restartPolicy": "always"
+      },
+      "healthCheck": {
+        "path": "/health",
+        "interval": 30,
+        "timeout": 10,
+        "retries": 3
+      }
+    },
+    "redis": {
+      "type": "redis",
+      "image": "redis:7-alpine",
+      "deploy": {
+        "replicas": 1,
+        "restartPolicy": "always"
+      }
+    }
+  }
+}
