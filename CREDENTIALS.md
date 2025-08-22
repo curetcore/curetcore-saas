@@ -142,7 +142,7 @@ Creado: 22 de Agosto, 2024
 
 ### Personal Access Token (para CI/CD)
 ```
-Token: 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
+Token: [REDACTED - Ver gestor de contraseñas]
 Scopes: repo, workflow, packages
 Creado: 22 de Agosto, 2024
 Actualizado: 22 de Agosto, 2024 (nuevo token)
