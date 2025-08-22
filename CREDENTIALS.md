@@ -7,9 +7,9 @@
 
 ## 📊 Base de Datos PostgreSQL
 
-### Conexión Principal (Data Warehouse)
+### Conexión Principal (Producción)
 ```bash
-Host: panel.curetshop.com
+Host: curetcore_postgres
 Port: 5432
 Database: warehouse
 Username: postgres
@@ -17,7 +17,21 @@ Password: Pitagora@
 SSL: false
 
 # Connection String
-DATABASE_URL=postgresql://postgres:Pitagora@@panel.curetshop.com:5432/warehouse
+DATABASE_URL=postgresql://postgres:Pitagora@@curetcore_postgres:5432/warehouse?sslmode=disable
+```
+
+### Opción Local para Desarrollo
+```bash
+# Si prefieres usar Docker Compose local
+Host: localhost
+Port: 5432
+Database: curetcore_dev
+Username: postgres
+Password: curetcore_dev_2024
+SSL: false
+
+# Connection String Development
+DATABASE_URL=postgresql://postgres:curetcore_dev_2024@localhost:5432/curetcore_dev
 ```
 
 ### Esquema CuretCore
