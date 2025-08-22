@@ -39,7 +39,8 @@ git push origin main
 ```
 Repository URL: https://github.com/curetcore/curetcore-saas.git
 Branch: main
-Build Path: /
+Build Path: /frontend  (para frontend)
+Token: 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
 ```
 
 ### 2.3 Configurar Servicios
