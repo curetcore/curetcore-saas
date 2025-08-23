@@ -41,16 +41,16 @@ export class AuthService {
         payload, 
         process.env.JWT_SECRET as string, 
         {
-          expiresIn: (process.env.JWT_EXPIRES_IN || '15m') as string | number
-        }
+          expiresIn: process.env.JWT_EXPIRES_IN || '15m'
+        } as any
       );
 
       const refreshToken = jwt.sign(
         payload, 
         process.env.JWT_REFRESH_SECRET as string, 
         {
-          expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '7d') as string | number
-        }
+          expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d'
+        } as any
       );
 
       // Eliminar password_hash del objeto usuario
@@ -80,8 +80,8 @@ export class AuthService {
         payload, 
         process.env.JWT_SECRET as string, 
         {
-          expiresIn: (process.env.JWT_EXPIRES_IN || '15m') as string | number
-        }
+          expiresIn: process.env.JWT_EXPIRES_IN || '15m'
+        } as any
       );
 
       return { accessToken };
