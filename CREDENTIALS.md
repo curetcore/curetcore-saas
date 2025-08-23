@@ -56,15 +56,17 @@ API: http://localhost:3001
 
 ## 🔑 Autenticación JWT
 
-### Secrets (Generar antes de producción)
+### Secrets (Generados para Producción)
 ```bash
-# Generar con: openssl rand -base64 32
-JWT_SECRET=J9BPxgA4hmTnI9eLi4g5kTj2s6cwfgJ+JIhpbsj+zPc=
-JWT_REFRESH_SECRET=LLVGJTCnwjKQXVap9gAemg/qI8rq//W+ys+sRIkgDos=
+# Generados el 23 de Agosto, 2024
+JWT_SECRET=c+NhLPDPAf0PBVKhkhHWl2iXIAUMfKoOULB3K0neWVs=
+JWT_REFRESH_SECRET=kVRZ+pfxJm5YBZBXNbOfjZwBHVtLDkotjdzneMq+uOk=
 
 # Tiempos de expiración
 JWT_EXPIRES_IN=15m
 JWT_REFRESH_EXPIRES_IN=7d
+
+# Para generar nuevos: openssl rand -base64 32
 ```
 
 ## 👤 Usuarios del Sistema
