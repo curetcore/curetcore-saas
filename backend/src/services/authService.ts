@@ -37,13 +37,17 @@ export class AuthService {
         role: user.role
       };
 
-      const accessToken = jwt.sign(payload, process.env.JWT_SECRET!, {
-        expiresIn: process.env.JWT_EXPIRES_IN || '15m'
-      });
+      const accessToken = jwt.sign(
+        payload, 
+        process.env.JWT_SECRET as string, 
+        { expiresIn: process.env.JWT_EXPIRES_IN || '15m' }
+      );
 
-      const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET!, {
-        expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d'
-      });
+      const refreshToken = jwt.sign(
+        payload, 
+        process.env.JWT_REFRESH_SECRET as string, 
+        { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d' }
+      );
 
       // Eliminar password_hash del objeto usuario
       const { password_hash, ...userWithoutPassword } = user;
@@ -68,9 +72,11 @@ export class AuthService {
         role: decoded.role
       };
 
-      const accessToken = jwt.sign(payload, process.env.JWT_SECRET!, {
-        expiresIn: process.env.JWT_EXPIRES_IN || '15m'
-      });
+      const accessToken = jwt.sign(
+        payload, 
+        process.env.JWT_SECRET as string, 
+        { expiresIn: process.env.JWT_EXPIRES_IN || '15m' }
+      );
 
       return { accessToken };
     } catch (error) {

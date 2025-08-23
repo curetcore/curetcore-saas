@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import { AuthService } from '../services/authService';
 import { authenticateToken, AuthRequest } from '../middleware/auth';
@@ -11,7 +11,7 @@ router.post('/login',
     body('email').isEmail().normalizeEmail(),
     body('password').notEmpty()
   ],
-  async (req, res) => {
+  async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -37,7 +37,7 @@ router.post('/login',
 // Refresh token
 router.post('/refresh',
   [body('refreshToken').notEmpty()],
-  async (req, res) => {
+  async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -61,7 +61,7 @@ router.post('/refresh',
 );
 
 // Get current user
-router.get('/me', authenticateToken, async (req: AuthRequest, res) => {
+router.get('/me', authenticateToken, async (req: AuthRequest, res: Response) => {
   try {
     res.json({
       success: true,
@@ -76,7 +76,7 @@ router.get('/me', authenticateToken, async (req: AuthRequest, res) => {
 });
 
 // Logout (cliente debe eliminar tokens)
-router.post('/logout', authenticateToken, (req: AuthRequest, res) => {
+router.post('/logout', authenticateToken, (_req: AuthRequest, res: Response) => {
   res.json({
     success: true,
     message: 'Logged out successfully'
