@@ -1,0 +1,44 @@
+{
+  "name": "curetcore-frontend",
+  "description": "CuretCore v2 - Business Intelligence SaaS Platform",
+  "repository": "https://github.com/curetcore/curetcore-saas",
+  "logo": "https://curetcore.com/logo.png",
+  "keywords": ["nextjs", "react", "typescript", "saas", "business-intelligence"],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "env": {
+    "NODE_ENV": {
+      "description": "Node environment",
+      "value": "production"
+    },
+    "NEXT_PUBLIC_API_URL": {
+      "description": "Backend API URL",
+      "value": "https://api.curetcore.com"
+    },
+    "NEXT_PUBLIC_APP_NAME": {
+      "description": "Application name",
+      "value": "CuretCore"
+    },
+    "NEXT_PUBLIC_APP_VERSION": {
+      "description": "Application version",
+      "value": "2.0.0"
+    },
+    "NEXT_PUBLIC_COMPANY_NAME": {
+      "description": "Company name",
+      "value": "Curetshop"
+    },
+    "NEXT_PUBLIC_REFRESH_INTERVAL": {
+      "description": "Data refresh interval in milliseconds",
+      "value": "300000"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "standard-1x"
+    }
+  }
+}
