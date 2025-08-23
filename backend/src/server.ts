@@ -83,25 +83,41 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🔗 Health check: http://0.0.0.0:${PORT}/health`);
   console.log(`📚 API Base URL: http://0.0.0.0:${PORT}/api`);
   console.log('✅ Server is ready to accept connections');
+  console.log('⚠️  Note: Database connection will be tested in background');
 });
 
-// Keep process alive
-process.stdin.resume();
+// Handle uncaught errors
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+  // Don't exit, just log
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  // Don't exit, just log
+});
 
 // Graceful shutdown
 const gracefulShutdown = (signal: string) => {
-  console.log(`${signal} signal received: starting graceful shutdown`);
+  console.log(`\n${signal} signal received: starting graceful shutdown`);
+  
+  // Don't wait for database connections
   server.close(() => {
     console.log('HTTP server closed');
     process.exit(0);
   });
   
-  // Force close after 30s
+  // Force close after 5s (reduced from 30s)
   setTimeout(() => {
-    console.error('Could not close connections in time, forcefully shutting down');
-    process.exit(1);
-  }, 30000);
+    console.log('Forcing shutdown');
+    process.exit(0);
+  }, 5000);
 };
 
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
+// Keep the process alive
+setInterval(() => {
+  // Heartbeat to keep process alive
+}, 1000);

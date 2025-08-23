@@ -3,38 +3,52 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_SSL === 'true' ? { rejectUnauthorized: false } : false,
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 10000, // Increased from 2000 to 10000
-});
+// Create pool only if DATABASE_URL is provided
+let pool: Pool | null = null;
 
-// Test connection on startup with retry
-const testConnection = async (retries = 3) => {
-  for (let i = 0; i < retries; i++) {
-    try {
-      const res = await pool.query('SELECT NOW()');
-      console.log('✅ Database connected at:', res.rows[0].now);
-      return;
-    } catch (err: any) {
-      console.error(`❌ Database connection attempt ${i + 1}/${retries} failed:`, err.message);
-      if (i === retries - 1) {
-        console.error('⚠️  WARNING: Database connection failed, but server will continue running');
-        console.error('⚠️  Database URL:', process.env.DATABASE_URL?.replace(/:[^:@]+@/, ':****@'));
-      } else {
-        await new Promise(resolve => setTimeout(resolve, 5000)); // Wait 5s before retry
+if (process.env.DATABASE_URL) {
+  try {
+    pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: process.env.DATABASE_SSL === 'true' ? { rejectUnauthorized: false } : false,
+      max: 20,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 10000,
+    });
+
+    // Handle pool errors silently
+    pool.on('error', (err) => {
+      console.error('Database pool error:', err.message);
+    });
+
+    // Test connection in background (don't block server startup)
+    setTimeout(async () => {
+      try {
+        if (pool) {
+          const res = await pool.query('SELECT NOW()');
+          console.log('✅ Database connected at:', res.rows[0].now);
+        }
+      } catch (err: any) {
+        console.error('⚠️  Database not available:', err.message);
+        console.error('⚠️  Using mock authentication for testing');
       }
-    }
+    }, 1000);
+    
+  } catch (err: any) {
+    console.error('Failed to create database pool:', err.message);
+    pool = null;
   }
+} else {
+  console.warn('⚠️  No DATABASE_URL provided, using mock data');
+}
+
+// Export a mock pool if real pool is not available
+const mockPool = {
+  query: async () => {
+    throw new Error('Database not available');
+  },
+  on: () => {},
+  end: async () => {}
 };
 
-testConnection();
-
-// Handle pool errors
-pool.on('error', (err) => {
-  console.error('Unexpected error on idle client', err);
-});
-
-export default pool;
+export default pool || mockPool as any;
