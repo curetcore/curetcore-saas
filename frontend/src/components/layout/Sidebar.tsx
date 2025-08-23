@@ -53,24 +53,26 @@ export function Sidebar() {
 
   return (
     <div className={cn(
-      "flex flex-col bg-gradient-to-b from-gray-900 to-gray-800 h-screen transition-all duration-300",
+      "relative flex flex-col bg-gradient-to-b from-gray-900 to-gray-800 h-screen transition-all duration-300",
       isCollapsed ? "w-16" : "w-64"
     )}>
       {/* Logo Section */}
-      <div className="flex items-center justify-between h-16 px-4 bg-gray-900/50 backdrop-blur-sm border-b border-gray-700/50">
-        <Link href="/dashboard" className="flex items-center">
-          <img 
-            src="/logo-white.png" 
-            alt="Curet Logo" 
-            className={cn(
-              "transition-all duration-300",
-              isCollapsed ? "h-8 w-auto" : "h-10 w-auto"
-            )}
-          />
-        </Link>
+      <div className="h-16 px-4 bg-gray-900/50 backdrop-blur-sm border-b border-gray-700/50">
+        <div className="h-full flex items-center justify-center">
+          <Link href="/dashboard" className="flex items-center">
+            <img 
+              src="/logo-white.png" 
+              alt="Curet Logo" 
+              className={cn(
+                "transition-all duration-300",
+                isCollapsed ? "h-8 w-auto" : "h-10 w-auto"
+              )}
+            />
+          </Link>
+        </div>
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-1.5 hover:bg-gray-700 rounded-lg transition-colors"
+          className="absolute top-4 right-2 p-1.5 hover:bg-gray-700 rounded-lg transition-colors"
         >
           {isCollapsed ? (
             <ChevronRight className="h-5 w-5 text-gray-400" />
@@ -172,21 +174,31 @@ export function Sidebar() {
         })}
       </nav>
       
-      {/* Bottom Section */}
+      {/* Bottom Section - Configuración */}
       <div className={cn(
-        "border-t border-gray-700/50 mb-2",
+        "mt-auto border-t border-gray-700/50 mb-2",
         isCollapsed ? "px-2 py-2" : "px-3 py-3"
       )}>
         <Link
           href="/dashboard/settings"
           className={cn(
-            "flex items-center text-sm font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white transition-colors",
-            isCollapsed ? "justify-center p-2" : "px-3 py-2"
+            "flex items-center text-sm font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white transition-colors group",
+            isCollapsed ? "justify-center p-2" : "px-3 py-2.5"
           )}
         >
-          <Settings className={cn("h-5 w-5", !isCollapsed && "mr-3")} />
+          <Settings className={cn(
+            "h-5 w-5 transition-transform group-hover:rotate-45",
+            !isCollapsed && "mr-3"
+          )} />
           {!isCollapsed && <span>Configuración</span>}
         </Link>
+        
+        {/* Tooltip para estado colapsado */}
+        {isCollapsed && (
+          <div className="absolute left-full ml-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 bottom-8">
+            Configuración
+          </div>
+        )}
       </div>
     </div>
   );
