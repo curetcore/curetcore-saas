@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { DollarSign, TrendingUp, TrendingDown } from 'lucide-react';
 import { WidgetSkeleton } from '@/components/ui/loading-states';
 import { SimpleTooltip } from '@/components/ui/tooltip';
+import { DateRange } from '@/components/ui/date-filter';
 
 interface DailySalesData {
   total: number;
@@ -12,7 +13,11 @@ interface DailySalesData {
   trend: 'up' | 'down' | 'neutral';
 }
 
-export function DailySalesWidget() {
+interface DailySalesWidgetProps {
+  dateRange: DateRange | null;
+}
+
+export function DailySalesWidget({ dateRange }: DailySalesWidgetProps) {
   const [data, setData] = useState<DailySalesData>({
     total: 0,
     count: 0,
@@ -22,18 +27,59 @@ export function DailySalesWidget() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // TODO: Implementar llamada a API real
-    // Simulación de datos
+    setLoading(true);
+    // TODO: Implementar llamada a API real con dateRange
+    // Simulación de datos según el rango de fechas
     setTimeout(() => {
-      setData({
+      // Simular diferentes datos según el rango seleccionado
+      let salesData = {
         total: 15750.50,
         count: 127,
         change: 12.5,
-        trend: 'up'
-      });
+        trend: 'up' as const
+      };
+      
+      if (dateRange) {
+        switch (dateRange.label) {
+          case 'Hoy':
+            salesData = {
+              total: 8432.25,
+              count: 67,
+              change: -5.2,
+              trend: 'down'
+            };
+            break;
+          case 'Ayer':
+            salesData = {
+              total: 8895.80,
+              count: 71,
+              change: 8.3,
+              trend: 'up'
+            };
+            break;
+          case 'Últimos 30 días':
+            salesData = {
+              total: 287543.90,
+              count: 2341,
+              change: 15.7,
+              trend: 'up'
+            };
+            break;
+          case 'Este mes':
+            salesData = {
+              total: 198765.40,
+              count: 1623,
+              change: 22.1,
+              trend: 'up'
+            };
+            break;
+        }
+      }
+      
+      setData(salesData);
       setLoading(false);
-    }, 1000);
-  }, []);
+    }, 800);
+  }, [dateRange]);
 
   if (loading) {
     return <WidgetSkeleton />;
@@ -63,7 +109,7 @@ export function DailySalesWidget() {
       
       <div className="mt-4">
         <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-          Ventas del Día
+          Ventas {dateRange ? `(${dateRange.label})` : 'del Día'}
         </p>
         <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
           ${data.total.toLocaleString('es-ES', { minimumFractionDigits: 2 })}

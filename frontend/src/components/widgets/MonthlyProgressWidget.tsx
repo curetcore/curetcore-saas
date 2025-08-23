@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Target } from 'lucide-react';
+import { DateRange } from '@/components/ui/date-filter';
 
 interface MonthlyProgressData {
   current: number;
@@ -10,7 +11,11 @@ interface MonthlyProgressData {
   daysLeft: number;
 }
 
-export function MonthlyProgressWidget() {
+interface MonthlyProgressWidgetProps {
+  dateRange: DateRange | null;
+}
+
+export function MonthlyProgressWidget({ dateRange }: MonthlyProgressWidgetProps) {
   const [data, setData] = useState<MonthlyProgressData>({
     current: 0,
     target: 0,
@@ -20,20 +25,59 @@ export function MonthlyProgressWidget() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // TODO: Implementar llamada a API real
-    // Simulación de datos
+    setLoading(true);
+    // TODO: Implementar llamada a API real con dateRange
+    // Simulación de datos según el rango de fechas
     setTimeout(() => {
-      const current = 385000;
-      const target = 500000;
-      setData({
-        current,
-        target,
-        percentage: (current / target) * 100,
+      let progressData = {
+        current: 385000,
+        target: 500000,
+        percentage: 77,
         daysLeft: 8
-      });
+      };
+      
+      if (dateRange) {
+        switch (dateRange.label) {
+          case 'Hoy':
+            progressData = {
+              current: 8432,
+              target: 15000,
+              percentage: 56.2,
+              daysLeft: 0
+            };
+            break;
+          case 'Este mes':
+            progressData = {
+              current: 385000,
+              target: 500000,
+              percentage: 77,
+              daysLeft: 8
+            };
+            break;
+          case 'Mes pasado':
+            progressData = {
+              current: 478923,
+              target: 450000,
+              percentage: 106.4,
+              daysLeft: 0
+            };
+            break;
+          case 'Últimos 30 días':
+            progressData = {
+              current: 425000,
+              target: 480000,
+              percentage: 88.5,
+              daysLeft: 0
+            };
+            break;
+        }
+      }
+      
+      progressData.percentage = (progressData.current / progressData.target) * 100;
+      setData(progressData);
       setLoading(false);
-    }, 1000);
-  }, []);
+    }, 800);
+  }, [dateRange]);
 
   if (loading) {
     return (
@@ -62,7 +106,7 @@ export function MonthlyProgressWidget() {
       
       <div className="mt-4">
         <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-          Progreso Mensual
+          Progreso {dateRange ? `(${dateRange.label})` : 'Mensual'}
         </p>
         <div className="mt-2">
           <div className="flex justify-between text-sm mb-1">
@@ -86,7 +130,11 @@ export function MonthlyProgressWidget() {
       
       <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
         <p className="text-sm text-gray-600 dark:text-gray-400">
-          <span className="font-medium text-gray-900 dark:text-white">{data.daysLeft}</span> días para fin de mes
+          {data.daysLeft > 0 ? (
+            <><span className="font-medium text-gray-900 dark:text-white">{data.daysLeft}</span> días restantes</>
+          ) : (
+            <span className="font-medium text-gray-900 dark:text-white">Período completado</span>
+          )}
         </p>
       </div>
     </div>

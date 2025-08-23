@@ -13,7 +13,15 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const menuItems = [
+interface MenuItem {
+  href: string;
+  label: string;
+  icon: any;
+  badge: string | null;
+  submenu?: MenuItem[];
+}
+
+const menuItems: MenuItem[] = [
   { 
     href: '/dashboard', 
     label: 'Dashboard', 
