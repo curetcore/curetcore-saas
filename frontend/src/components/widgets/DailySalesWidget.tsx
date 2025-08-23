@@ -46,7 +46,7 @@ export function DailySalesWidget({ dateRange }: DailySalesWidgetProps) {
               total: 8432.25,
               count: 67,
               change: -5.2,
-              trend: 'down'
+              trend: 'down' as const
             };
             break;
           case 'Ayer':
@@ -54,7 +54,7 @@ export function DailySalesWidget({ dateRange }: DailySalesWidgetProps) {
               total: 8895.80,
               count: 71,
               change: 8.3,
-              trend: 'up'
+              trend: 'up' as const
             };
             break;
           case 'Últimos 30 días':
@@ -62,7 +62,7 @@ export function DailySalesWidget({ dateRange }: DailySalesWidgetProps) {
               total: 287543.90,
               count: 2341,
               change: 15.7,
-              trend: 'up'
+              trend: 'up' as const
             };
             break;
           case 'Este mes':
@@ -70,7 +70,7 @@ export function DailySalesWidget({ dateRange }: DailySalesWidgetProps) {
               total: 198765.40,
               count: 1623,
               change: 22.1,
-              trend: 'up'
+              trend: 'up' as const
             };
             break;
         }
