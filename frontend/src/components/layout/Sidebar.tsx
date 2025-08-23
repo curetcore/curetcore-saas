@@ -8,7 +8,6 @@ import {
   FileText,
   Settings,
   ChevronDown,
-  HelpCircle,
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
@@ -167,19 +166,9 @@ export function Sidebar() {
       
       {/* Bottom Section */}
       <div className={cn(
-        "border-t border-gray-700/50 mb-4",
-        isCollapsed ? "px-2 py-3" : "px-4 py-4"
+        "border-t border-gray-700/50 mb-2",
+        isCollapsed ? "px-2 py-2" : "px-3 py-3"
       )}>
-        <Link
-          href="/dashboard/help"
-          className={cn(
-            "flex items-center mb-2 text-sm font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white transition-colors",
-            isCollapsed ? "justify-center p-2" : "px-3 py-2"
-          )}
-        >
-          <HelpCircle className={cn("h-5 w-5", !isCollapsed && "mr-3")} />
-          {!isCollapsed && <span>Ayuda y Soporte</span>}
-        </Link>
         <Link
           href="/dashboard/settings"
           className={cn(

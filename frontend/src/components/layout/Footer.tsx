@@ -1,6 +1,6 @@
 'use client';
 
-import { Heart, Github, Twitter, Linkedin } from 'lucide-react';
+import { Github, Twitter, Linkedin } from 'lucide-react';
 import Link from 'next/link';
 
 export function Footer() {
@@ -92,8 +92,8 @@ export function Footer() {
             <p className="text-sm text-gray-600 dark:text-gray-400">
               © {currentYear} CuretCore. Todos los derechos reservados.
             </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center mt-2 md:mt-0">
-              Hecho con <Heart className="h-4 w-4 mx-1 text-red-500" /> por Ronaldo Paulino
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 md:mt-0">
+              Hecho por Ronaldo Paulino
             </p>
           </div>
         </div>
