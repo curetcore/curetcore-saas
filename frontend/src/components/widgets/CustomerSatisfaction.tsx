@@ -1,25 +1,93 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Star, TrendingUp } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
+import { DateRange } from '@/components/ui/date-filter';
 
-const ratings = [
-  { stars: 5, count: 456, percentage: 68 },
-  { stars: 4, count: 123, percentage: 18 },
-  { stars: 3, count: 67, percentage: 10 },
-  { stars: 2, count: 20, percentage: 3 },
-  { stars: 1, count: 7, percentage: 1 },
-];
+interface CustomerSatisfactionProps {
+  dateRange: DateRange | null;
+}
 
-export function CustomerSatisfaction() {
+interface RatingData {
+  stars: number;
+  count: number;
+  percentage: number;
+}
+
+export function CustomerSatisfaction({ dateRange }: CustomerSatisfactionProps) {
+  const [ratings, setRatings] = useState<RatingData[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    setLoading(true);
+    // Simular carga de datos según el rango
+    setTimeout(() => {
+      let ratingsData: RatingData[] = [];
+      
+      if (dateRange?.label === 'Hoy') {
+        ratingsData = [
+          { stars: 5, count: 23, percentage: 72 },
+          { stars: 4, count: 6, percentage: 19 },
+          { stars: 3, count: 2, percentage: 6 },
+          { stars: 2, count: 1, percentage: 3 },
+          { stars: 1, count: 0, percentage: 0 },
+        ];
+      } else if (dateRange?.label === 'Últimos 30 días') {
+        ratingsData = [
+          { stars: 5, count: 892, percentage: 71 },
+          { stars: 4, count: 238, percentage: 19 },
+          { stars: 3, count: 88, percentage: 7 },
+          { stars: 2, count: 25, percentage: 2 },
+          { stars: 1, count: 13, percentage: 1 },
+        ];
+      } else {
+        // Datos por defecto
+        ratingsData = [
+          { stars: 5, count: 456, percentage: 68 },
+          { stars: 4, count: 123, percentage: 18 },
+          { stars: 3, count: 67, percentage: 10 },
+          { stars: 2, count: 20, percentage: 3 },
+          { stars: 1, count: 7, percentage: 1 },
+        ];
+      }
+      
+      setRatings(ratingsData);
+      setLoading(false);
+    }, 600);
+  }, [dateRange]);
   const totalReviews = ratings.reduce((sum, item) => sum + item.count, 0);
-  const averageRating = ratings.reduce((sum, item) => sum + (item.stars * item.count), 0) / totalReviews;
+  const averageRating = totalReviews > 0 
+    ? ratings.reduce((sum, item) => sum + (item.stars * item.count), 0) / totalReviews 
+    : 0;
+    
+  if (loading) {
+    return (
+      <Card>
+        <CardHeader>
+          <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2 animate-pulse"></div>
+          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 animate-pulse"></div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="flex items-center space-x-3">
+                <div className="w-16 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                <div className="w-12 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Satisfacción del Cliente</CardTitle>
+        <CardTitle>Satisfacción del Cliente {dateRange ? `(${dateRange.label})` : ''}</CardTitle>
         <CardDescription>Basado en {totalReviews} reseñas</CardDescription>
       </CardHeader>
       <CardContent>
@@ -62,7 +130,12 @@ export function CustomerSatisfaction() {
           <div className="flex items-center space-x-2">
             <TrendingUp className="h-4 w-4 text-green-600 dark:text-green-400" />
             <span className="text-sm font-medium text-green-600 dark:text-green-400">
-              +0.3 puntos vs. mes anterior
+              {dateRange?.label === 'Hoy' 
+                ? '+0.5 puntos vs. ayer'
+                : dateRange?.label === 'Últimos 30 días'
+                  ? '+0.4 puntos vs. periodo anterior'
+                  : '+0.3 puntos vs. mes anterior'
+              }
             </span>
           </div>
         </div>
