@@ -37,9 +37,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/', limiter);
 
-// Health check endpoint
+// Health check endpoints
 app.get('/health', (_req, res) => {
-  res.json({ status: 'OK', version: '2.0.0' });
+  res.json({ 
+    status: 'OK', 
+    version: '2.0.0',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
+// Root endpoint
+app.get('/', (_req, res) => {
+  res.json({ 
+    message: 'CuretCore API',
+    version: '2.0.0',
+    health: '/health',
+    api: '/api'
+  });
 });
 
 // Routes
@@ -65,23 +80,28 @@ app.use((_req, res) => {
 // Start server
 const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`🔗 Health check: http://localhost:${PORT}/health`);
-  console.log(`📚 API Base URL: http://localhost:${PORT}/api`);
+  console.log(`🔗 Health check: http://0.0.0.0:${PORT}/health`);
+  console.log(`📚 API Base URL: http://0.0.0.0:${PORT}/api`);
+  console.log('✅ Server is ready to accept connections');
 });
+
+// Keep process alive
+process.stdin.resume();
 
 // Graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('SIGTERM signal received: closing HTTP server');
+const gracefulShutdown = (signal: string) => {
+  console.log(`${signal} signal received: starting graceful shutdown`);
   server.close(() => {
     console.log('HTTP server closed');
     process.exit(0);
   });
-});
+  
+  // Force close after 30s
+  setTimeout(() => {
+    console.error('Could not close connections in time, forcefully shutting down');
+    process.exit(1);
+  }, 30000);
+};
 
-process.on('SIGINT', () => {
-  console.log('SIGINT signal received: closing HTTP server');
-  server.close(() => {
-    console.log('HTTP server closed');
-    process.exit(0);
-  });
-});
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));

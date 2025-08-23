@@ -6,6 +6,14 @@ import { User, JWTPayload, AuthResponse } from '../types/user';
 export class AuthService {
   static async login(email: string, password: string): Promise<AuthResponse> {
     try {
+      // Check if database is available
+      try {
+        await pool.query('SELECT 1');
+      } catch (dbError) {
+        console.error('Database not available for login');
+        throw new Error('Service temporarily unavailable');
+      }
+      
       // Buscar usuario por email
       const result = await pool.query(
         'SELECT * FROM curetcore.users WHERE email = $1 AND is_active = true',
