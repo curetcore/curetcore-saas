@@ -1,19 +1,18 @@
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { JWTPayload, AuthResponse } from '../types/user';
+import { JWTPayload, AuthResponse, User } from '../types/user';
 
 // Mock users for testing when database is unavailable
-const MOCK_USERS = [
+const MOCK_USERS: User[] = [
   {
     id: '1',
     email: 'admin@curetcore.com',
     password_hash: '$2a$10$YourHashHere', // Will be set on first use
     first_name: 'Admin',
     last_name: 'User',
-    role: 'admin',
+    role: 'admin' as const,
     created_at: new Date(),
     updated_at: new Date(),
-    last_login: null,
+    last_login: undefined,
     is_active: true
   }
 ];
