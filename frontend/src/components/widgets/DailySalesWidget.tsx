@@ -43,37 +43,36 @@ export function DailySalesWidget() {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center">
-          <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-lg">
-            <DollarSign className="h-6 w-6 text-blue-600 dark:text-blue-300" />
-          </div>
-          <div className="ml-4">
-            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">
-              Ventas del Día
-            </h3>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
-              ${data.total.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
-            </p>
-          </div>
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow">
+      <div className="flex items-center justify-between">
+        <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg">
+          <DollarSign className="h-6 w-6 text-white" />
+        </div>
+        <div className={`flex items-center space-x-1 text-sm font-medium ${
+          data.trend === 'up' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+        }`}>
+          {data.trend === 'up' ? (
+            <TrendingUp className="h-4 w-4" />
+          ) : (
+            <TrendingDown className="h-4 w-4" />
+          )}
+          <span>{data.change}%</span>
         </div>
       </div>
       
-      <div className="flex items-center justify-between text-sm">
-        <span className="text-gray-600 dark:text-gray-400">
-          {data.count} ventas
-        </span>
-        <div className={`flex items-center ${
-          data.trend === 'up' ? 'text-green-600' : 'text-red-600'
-        }`}>
-          {data.trend === 'up' ? (
-            <TrendingUp className="h-4 w-4 mr-1" />
-          ) : (
-            <TrendingDown className="h-4 w-4 mr-1" />
-          )}
-          {data.change}%
-        </div>
+      <div className="mt-4">
+        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+          Ventas del Día
+        </p>
+        <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+          ${data.total.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+        </p>
+      </div>
+      
+      <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          <span className="font-medium text-gray-900 dark:text-white">{data.count}</span> ventas realizadas
+        </p>
       </div>
     </div>
   );
