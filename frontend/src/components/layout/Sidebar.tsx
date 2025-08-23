@@ -5,22 +5,10 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { 
   LayoutDashboard, 
-  ShoppingCart, 
-  Package, 
-  DollarSign, 
-  Users, 
   FileText,
   Settings,
   ChevronDown,
-  TrendingUp,
-  Store,
-  BarChart3,
-  PieChart,
-  Calendar,
-  Bell,
   HelpCircle,
-  Menu,
-  X,
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
@@ -31,39 +19,6 @@ const menuItems = [
     href: '/dashboard', 
     label: 'Dashboard', 
     icon: LayoutDashboard,
-    badge: null 
-  },
-  { 
-    href: '/dashboard/sales', 
-    label: 'Ventas', 
-    icon: ShoppingCart,
-    badge: 'nuevo',
-    submenu: [
-      { href: '/dashboard/sales/orders', label: 'Órdenes', icon: FileText },
-      { href: '/dashboard/sales/customers', label: 'Clientes', icon: Users },
-      { href: '/dashboard/sales/products', label: 'Productos', icon: Package },
-    ]
-  },
-  { 
-    href: '/dashboard/inventory', 
-    label: 'Inventario', 
-    icon: Package,
-    badge: '12' 
-  },
-  { 
-    href: '/dashboard/finance', 
-    label: 'Finanzas', 
-    icon: DollarSign,
-    submenu: [
-      { href: '/dashboard/finance/income', label: 'Ingresos', icon: TrendingUp },
-      { href: '/dashboard/finance/expenses', label: 'Gastos', icon: BarChart3 },
-      { href: '/dashboard/finance/reports', label: 'Reportes', icon: PieChart },
-    ]
-  },
-  { 
-    href: '/dashboard/employees', 
-    label: 'Empleados', 
-    icon: Users,
     badge: null 
   },
   { 
