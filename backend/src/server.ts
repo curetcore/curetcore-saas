@@ -27,11 +27,37 @@ const limiter = rateLimit({
 });
 
 // Middleware
-app.use(helmet());
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
-  credentials: true
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
+
+// CORS configuration
+const corsOptions = {
+  origin: function (origin: any, callback: any) {
+    const allowedOrigins = [
+      process.env.CORS_ORIGIN,
+      'https://curetcore.com',
+      'https://www.curetcore.com',
+      'http://localhost:3000',
+      'http://localhost:3001'
+    ];
+    
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -39,7 +65,8 @@ app.use('/api/', limiter);
 
 // Health check endpoints
 app.get('/health', (_req, res) => {
-  res.json({ 
+  console.log('Health check requested');
+  res.status(200).json({ 
     status: 'OK', 
     version: '2.0.0',
     timestamp: new Date().toISOString(),
@@ -47,9 +74,22 @@ app.get('/health', (_req, res) => {
   });
 });
 
+// Alternative health check endpoints
+app.get('/healthz', (_req, res) => {
+  res.status(200).send('OK');
+});
+
+app.get('/ready', (_req, res) => {
+  res.status(200).send('OK');
+});
+
+app.get('/live', (_req, res) => {
+  res.status(200).send('OK');
+});
+
 // Root endpoint
 app.get('/', (_req, res) => {
-  res.json({ 
+  res.status(200).json({ 
     message: 'CuretCore API',
     version: '2.0.0',
     health: '/health',
@@ -84,6 +124,8 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`📚 API Base URL: http://0.0.0.0:${PORT}/api`);
   console.log('✅ Server is ready to accept connections');
   console.log('⚠️  Note: Database connection will be tested in background');
+  console.log(`📊 Process info: PID=${process.pid}, Platform=${process.platform}`);
+  console.log(`🔧 Environment: NODE_ENV=${process.env.NODE_ENV}`);
 });
 
 // Handle uncaught errors
@@ -100,24 +142,22 @@ process.on('unhandledRejection', (reason, promise) => {
 // Graceful shutdown
 const gracefulShutdown = (signal: string) => {
   console.log(`\n${signal} signal received: starting graceful shutdown`);
+  console.log('Closing server...');
   
-  // Don't wait for database connections
   server.close(() => {
     console.log('HTTP server closed');
     process.exit(0);
   });
   
-  // Force close after 5s (reduced from 30s)
+  // Force close after 10s
   setTimeout(() => {
-    console.log('Forcing shutdown');
-    process.exit(0);
-  }, 5000);
+    console.error('Could not close connections in time, forcefully shutting down');
+    process.exit(1);
+  }, 10000);
 };
 
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
-// Keep the process alive
-setInterval(() => {
-  // Heartbeat to keep process alive
-}, 1000);
+// Log that we're ready for Heroku/EasyPanel
+console.log('Application is running and ready to accept connections');
