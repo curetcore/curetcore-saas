@@ -11,4 +11,18 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000,
 });
 
+// Test connection on startup
+pool.query('SELECT NOW()', (err, res) => {
+  if (err) {
+    console.error('❌ Database connection error:', err.message);
+  } else {
+    console.log('✅ Database connected at:', res.rows[0].now);
+  }
+});
+
+// Handle pool errors
+pool.on('error', (err) => {
+  console.error('Unexpected error on idle client', err);
+});
+
 export default pool;
