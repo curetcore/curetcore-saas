@@ -141,25 +141,75 @@ process.on('unhandledRejection', (reason, promise) => {
   // Don't exit, just log
 });
 
+// Keep track of connections
+const connections = new Set<any>();
+
+server.on('connection', (connection) => {
+  connections.add(connection);
+  connection.on('close', () => {
+    connections.delete(connection);
+  });
+});
+
 // Graceful shutdown
+let isShuttingDown = false;
+
 const gracefulShutdown = (signal: string) => {
-  console.log(`\n${signal} signal received: starting graceful shutdown`);
-  console.log('Closing server...');
+  if (isShuttingDown) {
+    console.log('Shutdown already in progress');
+    return;
+  }
   
-  server.close(() => {
-    console.log('HTTP server closed');
+  isShuttingDown = true;
+  console.log(`\n${signal} signal received: starting graceful shutdown`);
+  console.log(`Active connections: ${connections.size}`);
+  
+  // Stop accepting new connections
+  server.close((err) => {
+    if (err) {
+      console.error('Error closing server:', err);
+    } else {
+      console.log('HTTP server closed successfully');
+    }
     process.exit(0);
   });
   
-  // Force close after 10s
+  // Close all connections
+  connections.forEach((connection) => {
+    connection.end();
+  });
+  
+  // Force close after 30s (more time for EasyPanel)
   setTimeout(() => {
     console.error('Could not close connections in time, forcefully shutting down');
+    connections.forEach((connection) => {
+      connection.destroy();
+    });
     process.exit(1);
-  }, 10000);
+  }, 30000);
 };
 
-process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
-process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+// Handle signals
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received from EasyPanel/system');
+  gracefulShutdown('SIGTERM');
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received (Ctrl+C)');
+  gracefulShutdown('SIGINT');
+});
+
+// Handle SIGHUP (often sent by process managers)
+process.on('SIGHUP', () => {
+  console.log('SIGHUP received, ignoring...');
+});
 
 // Log that we're ready for Heroku/EasyPanel
 console.log('Application is running and ready to accept connections');
+
+// Keep the process alive
+setInterval(() => {
+  const memUsage = process.memoryUsage();
+  console.log(`Health: OK | Memory: ${Math.round(memUsage.heapUsed / 1024 / 1024)}MB | Connections: ${connections.size} | Uptime: ${Math.round(process.uptime())}s`);
+}, 60000); // Log every minute
