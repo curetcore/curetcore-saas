@@ -5,7 +5,7 @@ const app = express();
 const PORT = parseInt(process.env.PORT || '3001', 10);
 
 // Simple health check
-app.get('/health', (req, res) => {
+app.get('/health', (_req, res) => {
   res.send('OK');
 });
 
