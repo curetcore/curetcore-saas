@@ -25,17 +25,16 @@ export function exportToCSV(data: ExportData, filename: string) {
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
   
-  if (navigator.msSaveBlob) {
-    // IE 10+
-    navigator.msSaveBlob(blob, filename);
-  } else {
-    link.href = URL.createObjectURL(blob);
-    link.download = filename;
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
+  // Crear URL del blob y descargar
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  
+  // Limpiar la URL del objeto
+  URL.revokeObjectURL(link.href);
 }
 
 export function collectDashboardData(): ExportData {
