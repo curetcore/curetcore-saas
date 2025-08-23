@@ -10,8 +10,9 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
-    "start:prod": "NODE_ENV=production node dist/server.js",
+    "start": "node wrapper.js",
+    "start:direct": "node dist/server.js",
+    "start:prod": "NODE_ENV=production node wrapper.js",
     "postinstall": "npm run build",
     "heroku-postbuild": "npm run build",
     "lint": "eslint src --ext .ts",

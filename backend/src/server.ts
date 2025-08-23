@@ -119,7 +119,7 @@ app.use((_req, res) => {
   });
 });
 
-// Start server
+// Start server with error handling
 const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`🔗 Health check: http://0.0.0.0:${PORT}/health`);
@@ -128,17 +128,36 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   console.log('⚠️  Note: Database connection will be tested in background');
   console.log(`📊 Process info: PID=${process.pid}, Platform=${process.platform}`);
   console.log(`🔧 Environment: NODE_ENV=${process.env.NODE_ENV}`);
+  console.log('💪 Server will continue running even if database is unavailable');
+});
+
+// Handle server errors
+server.on('error', (error) => {
+  console.error('Server error:', error);
+  if ((error as any).code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use`);
+    process.exit(1);
+  }
 });
 
 // Handle uncaught errors
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
-  // Don't exit, just log
+  // Don't exit on database errors
+  if (err.message && err.message.includes('database')) {
+    console.log('Database error detected, but server will continue running');
+  } else if (err.message && err.message.includes('ECONNREFUSED')) {
+    console.log('Connection refused, but server will continue running');
+  } else {
+    // For other critical errors, log but don't exit
+    console.error('Critical error, but keeping server alive');
+  }
 });
 
 process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-  // Don't exit, just log
+  // Don't exit on promise rejections
+  console.log('Promise rejection detected, but server will continue running');
 });
 
 // Keep track of connections
@@ -208,8 +227,35 @@ process.on('SIGHUP', () => {
 // Log that we're ready for Heroku/EasyPanel
 console.log('Application is running and ready to accept connections');
 
-// Keep the process alive
+// Keep the process alive and check health
+let healthCheckFailures = 0;
+const maxHealthCheckFailures = 5;
+
 setInterval(() => {
-  const memUsage = process.memoryUsage();
-  console.log(`Health: OK | Memory: ${Math.round(memUsage.heapUsed / 1024 / 1024)}MB | Connections: ${connections.size} | Uptime: ${Math.round(process.uptime())}s`);
-}, 60000); // Log every minute
+  try {
+    const memUsage = process.memoryUsage();
+    const healthStatus = {
+      status: 'OK',
+      memory: `${Math.round(memUsage.heapUsed / 1024 / 1024)}MB`,
+      connections: connections.size,
+      uptime: Math.round(process.uptime()),
+      timestamp: new Date().toISOString()
+    };
+    
+    console.log(`[${healthStatus.timestamp}] Health: ${healthStatus.status} | Memory: ${healthStatus.memory} | Connections: ${healthStatus.connections} | Uptime: ${healthStatus.uptime}s`);
+    
+    // Reset health check failures on successful log
+    healthCheckFailures = 0;
+  } catch (error) {
+    console.error('Health check error:', error);
+    healthCheckFailures++;
+    
+    if (healthCheckFailures >= maxHealthCheckFailures) {
+      console.error(`Health check failed ${healthCheckFailures} times, but keeping server alive`);
+      healthCheckFailures = 0; // Reset counter
+    }
+  }
+}, 30000); // Log every 30 seconds for better monitoring
+
+// Prevent the process from exiting
+process.stdin.resume();
