@@ -1,12 +1,14 @@
 'use client';
 
-import { Bell, User, Search, Settings, LogOut, ChevronDown } from 'lucide-react';
+import { Bell, User, Search, Settings, LogOut, ChevronDown, Sun, Moon } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 export function Header() {
   const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const router = useRouter();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -52,6 +54,19 @@ export function Header() {
         </div>
         
         <div className="flex items-center space-x-4">
+          {/* Theme Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+            aria-label="Toggle theme"
+          >
+            {theme === 'light' ? (
+              <Moon className="h-5 w-5" />
+            ) : (
+              <Sun className="h-5 w-5" />
+            )}
+          </button>
+          
           {/* Notifications */}
           <div className="relative">
             <button 

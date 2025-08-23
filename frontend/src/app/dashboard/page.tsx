@@ -11,8 +11,8 @@ import { QuickStats } from '@/components/widgets/QuickStats';
 
 export default function DashboardPage() {
   return (
-    <div className="space-y-8">
-      <div>
+    <div className="space-y-8 animate-fade-in">
+      <div className="animate-in">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
           Dashboard Principal
         </h1>
