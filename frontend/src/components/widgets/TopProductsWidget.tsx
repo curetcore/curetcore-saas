@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { Package } from 'lucide-react';
+import { TableSkeleton } from '@/components/ui/loading-states';
+import { NoProductsEmpty } from '@/components/ui/empty-states';
 
 interface Product {
   id: string;
@@ -30,14 +32,13 @@ export function TopProductsWidget() {
   }, []);
 
   if (loading) {
+    return <TableSkeleton rows={5} />;
+  }
+
+  if (products.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 animate-pulse">
-        <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/3 mb-4"></div>
-        <div className="space-y-3">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-12 bg-gray-200 dark:bg-gray-700 rounded"></div>
-          ))}
-        </div>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+        <NoProductsEmpty onAdd={() => console.log('Add product')} />
       </div>
     );
   }

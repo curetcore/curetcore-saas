@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { DollarSign, TrendingUp, TrendingDown } from 'lucide-react';
+import { WidgetSkeleton } from '@/components/ui/loading-states';
+import { SimpleTooltip } from '@/components/ui/tooltip';
 
 interface DailySalesData {
   total: number;
@@ -34,30 +36,29 @@ export function DailySalesWidget() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 animate-pulse">
-        <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
-        <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-      </div>
-    );
+    return <WidgetSkeleton />;
   }
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between">
-        <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg">
-          <DollarSign className="h-6 w-6 text-white" />
-        </div>
-        <div className={`flex items-center space-x-1 text-sm font-medium ${
-          data.trend === 'up' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-        }`}>
-          {data.trend === 'up' ? (
-            <TrendingUp className="h-4 w-4" />
-          ) : (
-            <TrendingDown className="h-4 w-4" />
-          )}
-          <span>{data.change}%</span>
-        </div>
+        <SimpleTooltip content="Ventas totales del día">
+          <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg">
+            <DollarSign className="h-6 w-6 text-white" />
+          </div>
+        </SimpleTooltip>
+        <SimpleTooltip content={`${data.trend === 'up' ? 'Incremento' : 'Disminución'} vs. ayer`}>
+          <div className={`flex items-center space-x-1 text-sm font-medium ${
+            data.trend === 'up' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+          }`}>
+            {data.trend === 'up' ? (
+              <TrendingUp className="h-4 w-4" />
+            ) : (
+              <TrendingDown className="h-4 w-4" />
+            )}
+            <span>{data.change}%</span>
+          </div>
+        </SimpleTooltip>
       </div>
       
       <div className="mt-4">
