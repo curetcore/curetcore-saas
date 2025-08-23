@@ -3,7 +3,7 @@
 import { Bell, User, Search, Settings, LogOut, ChevronDown, Sun, Moon } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 export function Header() {
@@ -12,6 +12,7 @@ export function Header() {
   const router = useRouter();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const handleLogout = async () => {
     await logout();
@@ -24,13 +25,25 @@ export function Header() {
     viewer: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200',
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   return (
     <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 relative z-10">
       <div className="px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center space-x-8">
+        <div className="flex items-center">
           <div>
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-              Dashboard de Ventas
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+              Hola, {user?.first_name} 👋
             </h2>
             <p className="text-sm text-gray-600 dark:text-gray-400 capitalize">
               {new Date().toLocaleDateString('es-ES', { 
@@ -41,16 +54,20 @@ export function Header() {
               })}
             </p>
           </div>
-          
-          {/* Search Bar */}
-          <div className="hidden md:flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg px-4 py-2 w-96">
-            <Search className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-2" />
-            <input 
-              type="text" 
-              placeholder="Buscar productos, clientes, órdenes..."
-              className="bg-transparent flex-1 outline-none text-sm text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400"
-            />
-          </div>
+        </div>
+        
+        {/* Search Bar - Centered */}
+        <div className="hidden md:flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg px-4 py-2 w-96 relative">
+          <Search className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-2" />
+          <input 
+            ref={searchInputRef}
+            type="text" 
+            placeholder="Buscar productos, clientes, órdenes..."
+            className="bg-transparent flex-1 outline-none text-sm text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400"
+          />
+          <kbd className="hidden sm:inline-flex h-5 select-none items-center gap-1 rounded border bg-gray-200 dark:bg-gray-600 px-1.5 font-mono text-[10px] font-medium text-gray-600 dark:text-gray-400">
+            <span className="text-xs">⌘</span>K
+          </kbd>
         </div>
         
         <div className="flex items-center space-x-4">

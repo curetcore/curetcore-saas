@@ -20,10 +20,11 @@ import {
   Bell,
   HelpCircle,
   Menu,
-  X
+  X,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useAuth } from '@/contexts/AuthContext';
 
 const menuItems = [
   { 
@@ -75,7 +76,6 @@ const menuItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { user } = useAuth();
   const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -97,40 +97,25 @@ export function Sidebar() {
       {/* Logo Section */}
       <div className="flex items-center justify-between h-16 px-4 bg-gray-900/50 backdrop-blur-sm border-b border-gray-700/50">
         <Link href="/dashboard" className="flex items-center space-x-3">
-          <div className="h-8 w-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-            <Store className="h-5 w-5 text-white" />
+          <div className="h-10 w-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center shadow-lg">
+            <span className="text-white font-bold text-xl">C</span>
           </div>
           {!isCollapsed && (
-            <div>
-              <h1 className="text-white text-lg font-bold">CuretCore</h1>
-              <p className="text-xs text-gray-400">Business Intelligence</p>
-            </div>
+            <span className="text-xl font-bold text-white">CuretCore</span>
           )}
         </Link>
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="text-gray-400 hover:text-white transition-colors lg:block hidden"
+          className="p-1.5 hover:bg-gray-700 rounded-lg transition-colors"
         >
-          {isCollapsed ? <Menu className="h-5 w-5" /> : <X className="h-5 w-5" />}
+          {isCollapsed ? (
+            <ChevronRight className="h-5 w-5 text-gray-400" />
+          ) : (
+            <ChevronLeft className="h-5 w-5 text-gray-400" />
+          )}
         </button>
       </div>
       
-      {/* User Info */}
-      {!isCollapsed && (
-        <div className="px-4 py-4 border-b border-gray-700/50">
-          <div className="flex items-center space-x-3">
-            <div className="h-10 w-10 bg-gradient-to-br from-green-500 to-teal-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-semibold text-sm">
-                {user?.first_name?.[0]}{user?.last_name?.[0]}
-              </span>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-white">{user?.first_name} {user?.last_name}</p>
-              <p className="text-xs text-gray-400">{user?.role}</p>
-            </div>
-          </div>
-        </div>
-      )}
       
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
@@ -225,27 +210,29 @@ export function Sidebar() {
       
       {/* Bottom Section */}
       <div className={cn(
-        "border-t border-gray-700/50",
+        "mt-auto border-t border-gray-700/50",
         isCollapsed ? "p-2" : "p-4"
       )}>
-        {!isCollapsed && (
-          <>
-            <Link
-              href="/dashboard/help"
-              className="flex items-center px-3 py-2 mb-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors"
-            >
-              <HelpCircle className="mr-3 h-5 w-5" />
-              Ayuda y Soporte
-            </Link>
-            <Link
-              href="/dashboard/settings"
-              className="flex items-center px-3 py-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors"
-            >
-              <Settings className="mr-3 h-5 w-5" />
-              Configuración
-            </Link>
-          </>
-        )}
+        <Link
+          href="/dashboard/help"
+          className={cn(
+            "flex items-center mb-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors",
+            isCollapsed ? "justify-center p-2" : "px-3 py-2"
+          )}
+        >
+          <HelpCircle className={cn("h-5 w-5", !isCollapsed && "mr-3")} />
+          {!isCollapsed && "Ayuda y Soporte"}
+        </Link>
+        <Link
+          href="/dashboard/settings"
+          className={cn(
+            "flex items-center text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors",
+            isCollapsed ? "justify-center p-2" : "px-3 py-2"
+          )}
+        >
+          <Settings className={cn("h-5 w-5", !isCollapsed && "mr-3")} />
+          {!isCollapsed && "Configuración"}
+        </Link>
       </div>
     </div>
   );
