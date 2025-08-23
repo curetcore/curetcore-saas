@@ -145,7 +145,7 @@ Creado: 22 de Agosto, 2024
 Token: [REDACTED - Ver gestor de contraseñas]
 Scopes: repo, workflow, packages
 Creado: 22 de Agosto, 2024
-Actualizado: 22 de Agosto, 2024 (nuevo token)
+Actualizado: 23 de Agosto, 2024
 ```
 
 ## 🔄 Servicios de Terceros

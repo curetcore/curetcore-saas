@@ -1,0 +1,62 @@
+{
+  "name": "curetcore-backend",
+  "description": "CuretCore v2 - Backend API Service",
+  "repository": "https://github.com/curetcore/curetcore-saas",
+  "logo": "https://curetcore.com/logo.png",
+  "keywords": ["express", "typescript", "api", "jwt", "postgresql"],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "env": {
+    "NODE_ENV": {
+      "description": "Node environment",
+      "value": "production"
+    },
+    "PORT": {
+      "description": "Port for the server",
+      "value": "3001"
+    },
+    "DATABASE_URL": {
+      "description": "PostgreSQL connection string",
+      "value": "postgresql://postgres:password@host:5432/database"
+    },
+    "JWT_SECRET": {
+      "description": "Secret for JWT tokens",
+      "generator": "secret"
+    },
+    "JWT_REFRESH_SECRET": {
+      "description": "Secret for JWT refresh tokens",
+      "generator": "secret"
+    },
+    "JWT_EXPIRES_IN": {
+      "description": "JWT token expiration time",
+      "value": "15m"
+    },
+    "JWT_REFRESH_EXPIRES_IN": {
+      "description": "JWT refresh token expiration time",
+      "value": "7d"
+    },
+    "CORS_ORIGIN": {
+      "description": "Allowed CORS origin",
+      "value": "https://curetcore.com"
+    },
+    "RATE_LIMIT_WINDOW": {
+      "description": "Rate limit window",
+      "value": "15m"
+    },
+    "RATE_LIMIT_MAX": {
+      "description": "Max requests per window",
+      "value": "100"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "standard-1x"
+    }
+  },
+  "addons": [],
+  "stack": "heroku-22"
+}
