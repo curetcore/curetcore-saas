@@ -12,7 +12,7 @@ dotenv.config();
 import authRoutes from './routes/auth';
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = parseInt(process.env.PORT || '3001', 10);
 
 // Trust proxy for EasyPanel/Heroku
 app.set('trust proxy', 1);
