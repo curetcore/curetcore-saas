@@ -10,6 +10,7 @@ dotenv.config();
 
 // Import routes
 import authRoutes from './routes/auth';
+import authentikRoutes from './routes/authentik';
 
 const app = express();
 const PORT = parseInt(process.env.PORT || '3001', 10);
@@ -99,6 +100,7 @@ app.get('/', (_req, res) => {
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/authentik', authentikRoutes);
 
 // Error handling middleware
 app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

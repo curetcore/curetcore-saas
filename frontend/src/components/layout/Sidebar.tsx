@@ -96,13 +96,15 @@ export function Sidebar() {
     )}>
       {/* Logo Section */}
       <div className="flex items-center justify-between h-16 px-4 bg-gray-900/50 backdrop-blur-sm border-b border-gray-700/50">
-        <Link href="/dashboard" className="flex items-center space-x-3">
-          <div className="h-10 w-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center shadow-lg">
-            <span className="text-white font-bold text-xl">C</span>
-          </div>
-          {!isCollapsed && (
-            <span className="text-xl font-bold text-white">CuretCore</span>
-          )}
+        <Link href="/dashboard" className="flex items-center">
+          <img 
+            src="/logo-white.png" 
+            alt="Curet Logo" 
+            className={cn(
+              "transition-all duration-300",
+              isCollapsed ? "h-8 w-auto" : "h-10 w-auto"
+            )}
+          />
         </Link>
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
@@ -210,28 +212,28 @@ export function Sidebar() {
       
       {/* Bottom Section */}
       <div className={cn(
-        "mt-auto border-t border-gray-700/50",
-        isCollapsed ? "p-2" : "p-4"
+        "border-t border-gray-700/50 mb-4",
+        isCollapsed ? "px-2 py-3" : "px-4 py-4"
       )}>
         <Link
           href="/dashboard/help"
           className={cn(
-            "flex items-center mb-2 text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors",
+            "flex items-center mb-2 text-sm font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white transition-colors",
             isCollapsed ? "justify-center p-2" : "px-3 py-2"
           )}
         >
           <HelpCircle className={cn("h-5 w-5", !isCollapsed && "mr-3")} />
-          {!isCollapsed && "Ayuda y Soporte"}
+          {!isCollapsed && <span>Ayuda y Soporte</span>}
         </Link>
         <Link
           href="/dashboard/settings"
           className={cn(
-            "flex items-center text-sm font-medium text-gray-300 rounded-md hover:bg-gray-700 hover:text-white transition-colors",
+            "flex items-center text-sm font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white transition-colors",
             isCollapsed ? "justify-center p-2" : "px-3 py-2"
           )}
         >
           <Settings className={cn("h-5 w-5", !isCollapsed && "mr-3")} />
-          {!isCollapsed && "Configuración"}
+          {!isCollapsed && <span>Configuración</span>}
         </Link>
       </div>
     </div>

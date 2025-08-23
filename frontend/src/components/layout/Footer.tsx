@@ -12,11 +12,17 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="h-10 w-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-xl">C</span>
-              </div>
-              <span className="text-xl font-bold text-gray-900 dark:text-white">CuretCore</span>
+            <div className="flex items-center mb-4">
+              <img 
+                src="/logo-black.png" 
+                alt="Curet Logo" 
+                className="h-12 w-auto dark:hidden"
+              />
+              <img 
+                src="/logo-white.png" 
+                alt="Curet Logo" 
+                className="h-12 w-auto hidden dark:block"
+              />
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
               Plataforma de inteligencia de negocios que centraliza todos tus datos para tomar decisiones más inteligentes.
@@ -87,7 +93,7 @@ export function Footer() {
               © {currentYear} CuretCore. Todos los derechos reservados.
             </p>
             <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center mt-2 md:mt-0">
-              Hecho con <Heart className="h-4 w-4 mx-1 text-red-500" /> por el equipo de CuretCore
+              Hecho con <Heart className="h-4 w-4 mx-1 text-red-500" /> por Ronaldo Paulino
             </p>
           </div>
         </div>

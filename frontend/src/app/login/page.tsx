@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authService } from '@/services/authService';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { loginWithAuthentik } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -29,11 +31,18 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
-            CuretCore
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex flex-col items-center">
+          <img 
+            src="/logo-black.png" 
+            alt="Curet Logo" 
+            className="h-16 w-auto mb-8 dark:hidden"
+          />
+          <img 
+            src="/logo-white.png" 
+            alt="Curet Logo" 
+            className="h-16 w-auto mb-8 hidden dark:block"
+          />
+          <p className="text-center text-sm text-gray-600 dark:text-gray-400">
             Business Intelligence Platform
           </p>
         </div>
@@ -92,6 +101,31 @@ export default function LoginPage() {
             >
               {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
             </button>
+          </div>
+          
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-300 dark:border-gray-600" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400">O continuar con</span>
+              </div>
+            </div>
+            
+            <div className="mt-6">
+              <button
+                type="button"
+                onClick={() => loginWithAuthentik()}
+                className="w-full flex justify-center items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 2.18l8 4V17c0 4.52-3.15 8.75-8 9.88-4.85-1.13-8-5.36-8-9.88V8.18l8-4z" fill="currentColor"/>
+                  <path d="M12 6l-5 2.5v6.5c0 3.14 2.18 6.08 5 6.93 2.82-.85 5-3.79 5-6.93V8.5L12 6z" fill="currentColor" opacity="0.5"/>
+                </svg>
+                Iniciar sesión con Authentik
+              </button>
+            </div>
           </div>
         </form>
       </div>

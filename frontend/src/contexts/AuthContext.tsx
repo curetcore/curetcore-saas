@@ -3,11 +3,13 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import { authService, User } from '@/services/authService';
+import { authentikService } from '@/services/authentikService';
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  loginWithAuthentik: () => Promise<void>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
 }
@@ -42,14 +44,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(response.user);
   };
 
+  const loginWithAuthentik = async () => {
+    try {
+      const loginUrl = await authentikService.getLoginUrl();
+      window.location.href = loginUrl;
+    } catch (error) {
+      console.error('Error iniciando login con Authentik:', error);
+      throw error;
+    }
+  };
+
   const logout = async () => {
-    await authService.logout();
-    setUser(null);
-    router.push('/login');
+    try {
+      // Primero logout local
+      await authService.logout();
+      setUser(null);
+      
+      // Si hay token de Authentik, hacer logout allá también
+      const idToken = localStorage.getItem('idToken');
+      if (idToken) {
+        const logoutUrl = await authentikService.getLogoutUrl(idToken);
+        window.location.href = logoutUrl;
+      } else {
+        router.push('/login');
+      }
+    } catch (error) {
+      console.error('Error en logout:', error);
+      router.push('/login');
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, checkAuth }}>
+    <AuthContext.Provider value={{ user, loading, login, loginWithAuthentik, logout, checkAuth }}>
       {children}
     </AuthContext.Provider>
   );
