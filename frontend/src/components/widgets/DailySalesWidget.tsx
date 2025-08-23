@@ -32,11 +32,11 @@ export function DailySalesWidget({ dateRange }: DailySalesWidgetProps) {
     // Simulación de datos según el rango de fechas
     setTimeout(() => {
       // Simular diferentes datos según el rango seleccionado
-      let salesData = {
+      let salesData: DailySalesData = {
         total: 15750.50,
         count: 127,
         change: 12.5,
-        trend: 'up' as const
+        trend: 'up'
       };
       
       if (dateRange) {
@@ -46,7 +46,7 @@ export function DailySalesWidget({ dateRange }: DailySalesWidgetProps) {
               total: 8432.25,
               count: 67,
               change: -5.2,
-              trend: 'down' as const
+              trend: 'down'
             };
             break;
           case 'Ayer':
@@ -54,7 +54,7 @@ export function DailySalesWidget({ dateRange }: DailySalesWidgetProps) {
               total: 8895.80,
               count: 71,
               change: 8.3,
-              trend: 'up' as const
+              trend: 'up'
             };
             break;
           case 'Últimos 30 días':
@@ -62,7 +62,7 @@ export function DailySalesWidget({ dateRange }: DailySalesWidgetProps) {
               total: 287543.90,
               count: 2341,
               change: 15.7,
-              trend: 'up' as const
+              trend: 'up'
             };
             break;
           case 'Este mes':
@@ -70,7 +70,7 @@ export function DailySalesWidget({ dateRange }: DailySalesWidgetProps) {
               total: 198765.40,
               count: 1623,
               change: 22.1,
-              trend: 'up' as const
+              trend: 'up'
             };
             break;
         }
