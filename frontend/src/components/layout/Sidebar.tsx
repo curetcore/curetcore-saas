@@ -56,28 +56,17 @@ export function Sidebar() {
       "relative flex flex-col bg-gradient-to-b from-gray-900 to-gray-800 h-screen transition-all duration-300",
       isCollapsed ? "w-16" : "w-64"
     )}>
-      {/* Logo Section */}
-      <div className="h-16 px-4 bg-gray-900/50 backdrop-blur-sm border-b border-gray-700/50">
-        <div className="h-full flex items-center justify-center">
-          <Link href="/dashboard" className="flex items-center">
-            <img 
-              src="/logo-white.png" 
-              alt="Curet Logo" 
-              className={cn(
-                "transition-all duration-300",
-                isCollapsed ? "h-8 w-auto" : "h-10 w-auto"
-              )}
-            />
-          </Link>
-        </div>
+      {/* Collapse Button */}
+      <div className="h-14 px-3 flex items-center justify-end border-b border-gray-700/50">
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="absolute top-4 right-2 p-1.5 hover:bg-gray-700 rounded-lg transition-colors"
+          className="p-2 hover:bg-gray-700 rounded-lg transition-colors group"
+          title={isCollapsed ? "Expandir menú" : "Colapsar menú"}
         >
           {isCollapsed ? (
-            <ChevronRight className="h-5 w-5 text-gray-400" />
+            <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-white" />
           ) : (
-            <ChevronLeft className="h-5 w-5 text-gray-400" />
+            <ChevronLeft className="h-5 w-5 text-gray-400 group-hover:text-white" />
           )}
         </button>
       </div>

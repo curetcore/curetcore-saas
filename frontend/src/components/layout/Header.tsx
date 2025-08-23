@@ -40,8 +40,21 @@ export function Header() {
   return (
     <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 relative z-10">
       <div className="px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center">
-          <div>
+        <div className="flex items-center space-x-6">
+          {/* Logo */}
+          <img 
+            src="/logo-black.png" 
+            alt="Curet Logo" 
+            className="h-8 w-auto dark:hidden"
+          />
+          <img 
+            src="/logo-white.png" 
+            alt="Curet Logo" 
+            className="h-8 w-auto hidden dark:block"
+          />
+          
+          {/* Greeting */}
+          <div className="border-l border-gray-300 dark:border-gray-600 pl-6">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
               Hola, {user?.first_name} 👋
             </h2>
