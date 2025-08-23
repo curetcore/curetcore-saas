@@ -1,12 +1,17 @@
 'use client';
 
-import { Bell, User, Search, Settings, LogOut, ChevronDown, Sun, Moon } from 'lucide-react';
+import { Bell, User, Search, Settings, LogOut, ChevronDown, Sun, Moon, Menu } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
-export function Header() {
+interface HeaderProps {
+  onToggleSidebar?: () => void;
+  isSidebarCollapsed?: boolean;
+}
+
+export function Header({ onToggleSidebar, isSidebarCollapsed = false }: HeaderProps) {
   const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const router = useRouter();
@@ -40,7 +45,16 @@ export function Header() {
   return (
     <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 relative z-10">
       <div className="px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center space-x-6">
+        <div className="flex items-center space-x-4">
+          {/* Sidebar Toggle */}
+          <button
+            onClick={onToggleSidebar}
+            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors group"
+            title={isSidebarCollapsed ? "Expandir menú" : "Colapsar menú"}
+          >
+            <Menu className="h-5 w-5 text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+          </button>
+          
           {/* Logo */}
           <img 
             src="/logo-black.png" 
@@ -54,7 +68,7 @@ export function Header() {
           />
           
           {/* Greeting */}
-          <div className="border-l border-gray-300 dark:border-gray-600 pl-6">
+          <div className="border-l border-gray-300 dark:border-gray-600 pl-4">
             <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
               Hola, {user?.first_name} 👋
             </h2>
