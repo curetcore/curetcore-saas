@@ -1,4 +1,4 @@
-import { Issuer, generators } from 'openid-client';
+const { Issuer, generators } = require('openid-client');
 import jwksClient from 'jwks-rsa';
 import jwt from 'jsonwebtoken';
 

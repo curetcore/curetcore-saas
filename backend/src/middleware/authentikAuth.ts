@@ -6,12 +6,13 @@ export interface AuthRequest extends Request {
   user?: any;
 }
 
-export async function authentikAuth(req: AuthRequest, res: Response, next: NextFunction) {
+export async function authentikAuth(req: AuthRequest, res: Response, next: NextFunction): Promise<void> {
   try {
     const authHeader = req.headers.authorization;
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ error: 'Token de autorización requerido' });
+      res.status(401).json({ error: 'Token de autorización requerido' });
+      return;
     }
     
     const token = authHeader.substring(7);
@@ -38,7 +39,8 @@ export async function authentikAuth(req: AuthRequest, res: Response, next: NextF
         };
         next();
       } catch (jwtError) {
-        return res.status(401).json({ error: 'Token inválido' });
+        res.status(401).json({ error: 'Token inválido' });
+        return;
       }
     }
   } catch (error) {

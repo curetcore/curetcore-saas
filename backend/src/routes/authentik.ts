@@ -39,18 +39,20 @@ router.get('/login', (_req: Request, res: Response) => {
 });
 
 // Callback de Authentik
-router.get('/callback', async (req: Request, res: Response) => {
+router.get('/callback', async (req: Request, res: Response): Promise<void> => {
   try {
     const { code, state } = req.query;
     
     if (!code || !state) {
-      return res.status(400).json({ error: 'Código o estado faltante' });
+      res.status(400).json({ error: 'Código o estado faltante' });
+      return;
     }
     
     // Validar state
     const stateData = stateStore.get(state as string);
     if (!stateData) {
-      return res.status(400).json({ error: 'Estado inválido' });
+      res.status(400).json({ error: 'Estado inválido' });
+      return;
     }
     stateStore.delete(state as string);
     
@@ -156,12 +158,13 @@ router.post('/logout', async (req: Request, res: Response) => {
 });
 
 // Validar token de Authentik
-router.post('/validate', async (req: Request, res: Response) => {
+router.post('/validate', async (req: Request, res: Response): Promise<void> => {
   try {
     const { token } = req.body;
     
     if (!token) {
-      return res.status(400).json({ error: 'Token requerido' });
+      res.status(400).json({ error: 'Token requerido' });
+      return;
     }
     
     const decoded = await validateAuthentikToken(token);
