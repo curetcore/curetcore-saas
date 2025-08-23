@@ -25,12 +25,7 @@ export default function DashboardLayout({
         <div className="flex flex-col h-screen bg-gray-100 dark:bg-gray-900">
           <Header onToggleSidebar={toggleSidebar} isSidebarCollapsed={isSidebarCollapsed} />
           <div className="flex flex-1 overflow-hidden">
-            <div className={cn(
-              "transition-all duration-300",
-              isSidebarCollapsed ? "w-0" : "w-64"
-            )}>
-              {!isSidebarCollapsed && <Sidebar />}
-            </div>
+            <Sidebar isCollapsed={isSidebarCollapsed} />
             <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-gray-900">
               <div className="flex flex-col min-h-full">
                 <div className="flex-1 container mx-auto px-6 py-8">

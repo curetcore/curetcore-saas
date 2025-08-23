@@ -19,6 +19,10 @@ interface MenuItem {
   submenu?: MenuItem[];
 }
 
+interface SidebarProps {
+  isCollapsed?: boolean;
+}
+
 const menuItems: MenuItem[] = [
   { 
     href: '/dashboard', 
@@ -34,7 +38,7 @@ const menuItems: MenuItem[] = [
   },
 ];
 
-export function Sidebar() {
+export function Sidebar({ isCollapsed = false }: SidebarProps) {
   const pathname = usePathname();
   const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
 
@@ -49,9 +53,15 @@ export function Sidebar() {
   const isMenuExpanded = (href: string) => expandedMenus.includes(href);
 
   return (
-    <div className="relative flex flex-col bg-gradient-to-b from-gray-900 to-gray-800 h-screen transition-all duration-300 w-64">
+    <div className={cn(
+      "relative flex flex-col bg-gradient-to-b from-gray-900 to-gray-800 h-screen transition-all duration-300",
+      isCollapsed ? "w-16" : "w-64"
+    )}>
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
+      <nav className={cn(
+        "flex-1 space-y-1 overflow-y-auto",
+        isCollapsed ? "px-2 py-4" : "px-3 py-6"
+      )}>
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
@@ -70,35 +80,50 @@ export function Sidebar() {
                     }
                   }}
                   className={cn(
-                    "flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 group",
+                    "flex items-center text-sm font-medium rounded-lg transition-all duration-200 group relative",
                     isActive
                       ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg"
-                      : "text-gray-300 hover:bg-gray-700/50 hover:text-white"
+                      : "text-gray-300 hover:bg-gray-700/50 hover:text-white",
+                    isCollapsed ? "justify-center p-2" : "px-3 py-2.5"
                   )}
                 >
-                  <Icon className="h-5 w-5 transition-all mr-3" />
-                  <span className="flex-1">{item.label}</span>
-                  {item.badge && (
-                    <span className={cn(
-                      "px-2 py-0.5 text-xs rounded-full",
-                      item.badge === 'nuevo' 
-                        ? "bg-green-500 text-white" 
-                        : "bg-gray-600 text-gray-200"
-                    )}>
-                      {item.badge}
-                    </span>
-                  )}
-                  {hasSubmenu && (
-                    <ChevronDown className={cn(
-                      "h-4 w-4 transition-transform",
-                      isExpanded ? "rotate-180" : ""
-                    )} />
+                  <Icon className={cn(
+                    "h-5 w-5 transition-all",
+                    !isCollapsed && "mr-3"
+                  )} />
+                  {!isCollapsed && (
+                    <>
+                      <span className="flex-1">{item.label}</span>
+                      {item.badge && (
+                        <span className={cn(
+                          "px-2 py-0.5 text-xs rounded-full",
+                          item.badge === 'nuevo' 
+                            ? "bg-green-500 text-white" 
+                            : "bg-gray-600 text-gray-200"
+                        )}>
+                          {item.badge}
+                        </span>
+                      )}
+                      {hasSubmenu && (
+                        <ChevronDown className={cn(
+                          "h-4 w-4 transition-transform",
+                          isExpanded ? "rotate-180" : ""
+                        )} />
+                      )}
+                    </>
                   )}
                 </Link>
+                
+                {/* Tooltip for collapsed state */}
+                {isCollapsed && (
+                  <div className="absolute left-full ml-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50">
+                    {item.label}
+                  </div>
+                )}
               </div>
               
               {/* Submenu */}
-              {hasSubmenu && isExpanded && (
+              {hasSubmenu && isExpanded && !isCollapsed && (
                 <div className="mt-1 ml-8 space-y-1">
                   {item.submenu?.map((subItem) => {
                     const SubIcon = subItem.icon;
@@ -128,14 +153,30 @@ export function Sidebar() {
       </nav>
       
       {/* Bottom Section - Configuración */}
-      <div className="mt-auto border-t border-gray-700/50 mb-2 px-3 py-3">
+      <div className={cn(
+        "mt-auto border-t border-gray-700/50 mb-2",
+        isCollapsed ? "px-2 py-2" : "px-3 py-3"
+      )}>
         <Link
           href="/dashboard/settings"
-          className="flex items-center text-sm font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white transition-colors group px-3 py-2.5"
+          className={cn(
+            "flex items-center text-sm font-medium text-gray-300 rounded-lg hover:bg-gray-700 hover:text-white transition-colors group relative",
+            isCollapsed ? "justify-center p-2" : "px-3 py-2.5"
+          )}
         >
-          <Settings className="h-5 w-5 transition-transform group-hover:rotate-45 mr-3" />
-          <span>Configuración</span>
+          <Settings className={cn(
+            "h-5 w-5 transition-transform group-hover:rotate-45",
+            !isCollapsed && "mr-3"
+          )} />
+          {!isCollapsed && <span>Configuración</span>}
         </Link>
+        
+        {/* Tooltip para estado colapsado */}
+        {isCollapsed && (
+          <div className="absolute left-full ml-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap z-50 bottom-8">
+            Configuración
+          </div>
+        )}
       </div>
     </div>
   );
