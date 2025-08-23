@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import pool from '../config/database';
 import { User, JWTPayload, AuthResponse } from '../types/user';
 
@@ -37,16 +37,24 @@ export class AuthService {
         role: user.role
       };
 
+      const accessTokenOptions: SignOptions = {
+        expiresIn: process.env.JWT_EXPIRES_IN || '15m'
+      };
+
+      const refreshTokenOptions: SignOptions = {
+        expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d'
+      };
+
       const accessToken = jwt.sign(
         payload, 
         process.env.JWT_SECRET as string, 
-        { expiresIn: process.env.JWT_EXPIRES_IN || '15m' }
+        accessTokenOptions
       );
 
       const refreshToken = jwt.sign(
         payload, 
         process.env.JWT_REFRESH_SECRET as string, 
-        { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d' }
+        refreshTokenOptions
       );
 
       // Eliminar password_hash del objeto usuario
@@ -72,10 +80,14 @@ export class AuthService {
         role: decoded.role
       };
 
+      const accessTokenOptions: SignOptions = {
+        expiresIn: process.env.JWT_EXPIRES_IN || '15m'
+      };
+
       const accessToken = jwt.sign(
         payload, 
         process.env.JWT_SECRET as string, 
-        { expiresIn: process.env.JWT_EXPIRES_IN || '15m' }
+        accessTokenOptions
       );
 
       return { accessToken };

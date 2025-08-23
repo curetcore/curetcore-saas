@@ -11,10 +11,11 @@ router.post('/login',
     body('email').isEmail().normalizeEmail(),
     body('password').notEmpty()
   ],
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response): Promise<void> => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      res.status(400).json({ errors: errors.array() });
+      return;
     }
 
     try {
@@ -37,10 +38,11 @@ router.post('/login',
 // Refresh token
 router.post('/refresh',
   [body('refreshToken').notEmpty()],
-  async (req: Request, res: Response) => {
+  async (req: Request, res: Response): Promise<void> => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      res.status(400).json({ errors: errors.array() });
+      return;
     }
 
     try {
@@ -61,7 +63,7 @@ router.post('/refresh',
 );
 
 // Get current user
-router.get('/me', authenticateToken, async (req: AuthRequest, res: Response) => {
+router.get('/me', authenticateToken, async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     res.json({
       success: true,
