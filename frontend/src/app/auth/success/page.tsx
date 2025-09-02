@@ -9,21 +9,9 @@ export default function AuthSuccessPage() {
   const router = useRouter();
 
   useEffect(() => {
-    const handleCallback = () => {
-      const result = authentikService.handleCallback();
-      
-      if (result.error) {
-        console.error('Error en autenticación:', result.error);
-        router.push('/login?error=auth_failed');
-      } else if (result.token && result.refresh) {
-        // Tokens guardados, redirigir al dashboard
-        router.push('/dashboard');
-      } else {
-        router.push('/login');
-      }
-    };
-
-    handleCallback();
+    // Por ahora, simplemente redirigir al dashboard
+    // La autenticación real se manejará cuando Authentik esté configurado
+    router.push('/dashboard');
   }, [router]);
 
   return (
